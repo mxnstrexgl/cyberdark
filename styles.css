@@ -1,0 +1,69 @@
+/* Force dark mode for body */
+body {
+  background-color: #1a1a1a !important;
+  color: #e0e0e0 !important;
+}
+
+/* Force dark backgrounds for all elements */
+* {
+  background-color: #1a1a1a !important;
+  color: #e0e0e0 !important;
+}
+
+/* Preserve images */
+img {
+  background-color: transparent !important;
+  filter: none !important;
+}
+
+/* Cyberpunk search bar styling */
+input[type="search"],
+input[type="text"],
+.search-bar,
+.search-input {
+  background: linear-gradient(45deg, #00ff00, #00ffff, #ff00ff, #ff0000) !important;
+  background-size: 400% 400% !important;
+  animation: gradient 15s ease infinite !important;
+  border: none !important;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  color: #000 !important;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Hover effect */
+input[type="search"]:hover,
+input[type="text"]:hover,
+.search-bar:hover,
+.search-input:hover {
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.7) !important;
+  transform: scale(1.02) !important;
+}
+
+/* Gradient animation */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Force dark mode on loading pages */
+.loading-page {
+  background-color: #1a1a1a !important;
+  color: #e0e0e0 !important;
+}
+
+/* Preserve original styling for specific elements */
+.code-block,
+pre,
+code {
+  background-color: #2d2d2d !important;
+  color: #00ff00 !important;
+}

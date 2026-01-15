@@ -1,0 +1,120 @@
+body {
+  background: #181828;
+  color: #fff;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+main {
+  max-width: 450px;
+  margin: 2rem auto;
+  background: #222233;
+  border-radius: 12px;
+  box-shadow: 0 0 24px #00fff7aa;
+  padding: 2rem;
+}
+h1 {
+  text-align: center;
+  color: #00fff7;
+  text-shadow: 0 0 8px #00fff7, 0 0 2px #000;
+}
+fieldset {
+  border: 1.5px solid #00fff7;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+legend {
+  color: #ff00ff;
+  font-weight: bold;
+}
+label {
+  display: block;
+  margin-bottom: 0.7rem;
+}
+input[type="color"] {
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  margin-left: 0.5rem;
+  box-shadow: 0 0 6px #00fff7;
+}
+input[type="checkbox"] {
+  accent-color: #00fff7;
+  margin-right: 0.5rem;
+}
+button {
+  background: linear-gradient(90deg, #00fff7, #ff00ff);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.5rem;
+  margin-right: 1rem;
+  font-weight: bold;
+  box-shadow: 0 0 10px #00fff7aa;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+button:hover {
+  background: linear-gradient(90deg, #ff00ff, #00fff7);
+}
+#status {
+  margin-top: 1rem;
+  text-align: center;
+  color: #00fff7;
+  font-weight: bold;
+}
+
+/* New styles moved from inline */
+.presets-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+#importFile {
+  display: none;
+}
+
+.live-preview {
+  margin-top: 2rem;
+}
+
+.live-preview-title {
+  font-size: 1.1rem;
+  color: #00fff7;
+}
+
+.preview-box {
+  padding: 1rem;
+  border-radius: 10px;
+  border: 2.5px solid #00fff7;
+  background: #23232b;
+  color: #fff;
+  margin-top: 0.5rem;
+}
+
+.preview-search {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.mt-1 { margin-top: 0.5rem; }
+.mb-1 { margin-bottom: 1rem; }
+
+.about-help { margin-top: 2rem; }
+
+.log-viewer {
+  width: 100%;
+  margin-top: 0.5rem;
+  display: none;
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+
+.schedule-inputs {
+  margin-left: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.full-width { width: 100%; }

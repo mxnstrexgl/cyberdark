@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Cyberdark Control</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <h1>Cyberdark</h1>
+      <label class="switch" title="Toggle extension globally">
+        <input type="checkbox" id="toggle" />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div id="status" aria-live="polite"></div>
+
+    <div class="section">
+      <button id="blacklistBtn" class="btn btn-destructive btn-outline w-full">Blacklist This Site</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <h2>Presets</h2>
+      <div class="grid-4">
+        <button class="btn btn-outline btn-sm preset-btn" data-preset="cyberpunk">Cyber</button>
+        <button class="btn btn-outline btn-sm preset-btn" data-preset="minimal">Minimal</button>
+        <button class="btn btn-outline btn-sm preset-btn" data-preset="vampire">Vampire</button>
+        <button class="btn btn-outline btn-sm preset-btn" data-preset="default">Default</button>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <details class="card">
+      <summary class="btn btn-ghost w-full summary-toggle">
+        <span>Advanced Settings</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </summary>
+
+      <form id="settings-form" class="form-mt">
+        <div class="section mb-2">
+          <h2>Neon Colors</h2>
+          <div class="grid-4">
+            <input type="color" name="color1" class="color-input" title="Primary Neon">
+            <input type="color" name="color2" class="color-input" title="Secondary Neon">
+            <input type="color" name="color3" class="color-input" title="Accent 1">
+            <input type="color" name="color4" class="color-input" title="Accent 2">
+          </div>
+        </div>
+
+        <div class="section mb-2">
+          <h2>Appearance</h2>
+          <div class="grid-2">
+            <label class="row">
+              <span class="text-sm">Text Shadow</span>
+              <input type="checkbox" name="textShadow" class="input">
+            </label>
+            <label class="row">
+              <span class="text-sm">High Contrast</span>
+              <input type="checkbox" name="highContrast" class="input">
+            </label>
+            <label class="row">
+              <span class="text-sm">Focus Outline</span>
+              <input type="checkbox" name="focusOutline" class="input">
+            </label>
+            <label class="row">
+              <span class="text-sm">Reduced Motion</span>
+              <input type="checkbox" name="reducedMotion" class="input">
+            </label>
+          </div>
+        </div>
+
+        <div class="section mb-2">
+          <div class="row">
+            <span class="text-sm font-medium">Font Size</span>
+            <span id="fontSizeValue" class="text-xs text-muted">16px</span>
+          </div>
+          <input type="range" name="fontSize" min="12" max="24" value="16" step="1" class="w-full">
+        </div>
+
+        <div class="section mb-2">
+          <label class="text-sm font-medium mb-2">Color Blindness Mode</label>
+          <select name="colorBlindMode" class="select">
+            <option value="none">None</option>
+            <option value="protanopia">Protanopia (Red-blind)</option>
+            <option value="deuteranopia">Deuteranopia (Green-blind)</option>
+            <option value="tritanopia">Tritanopia (Blue-blind)</option>
+            <option value="achromatopsia">Achromatopsia</option>
+          </select>
+        </div>
+
+        <div class="section mb-2 card card-muted">
+          <label class="row">
+            <span class="text-sm font-medium">Enable Schedule</span>
+            <input type="checkbox" name="scheduleEnabled" class="input">
+          </label>
+          <div id="scheduleInputs" class="row mt-2 hidden">
+            <input type="time" name="scheduleStart" class="input">
+            <span class="text-sm">to</span>
+            <input type="time" name="scheduleEnd" class="input">
+          </div>
+        </div>
+
+        <div class="section mb-2">
+          <label class="text-sm font-medium mb-2">Blacklist (one per line)</label>
+          <textarea name="blacklist" rows="3" class="textarea"></textarea>
+        </div>
+
+        <div class="section mb-2">
+          <h2>Security</h2>
+          <label class="row">
+            <span class="text-sm">Enable Resource Monitor</span>
+            <input type="checkbox" name="resourceMonitorEnabled" class="input">
+          </label>
+          <div class="text-xs text-muted mt-1">Warns if a site uses >1GB RAM or lags CPU.</div>
+        </div>
+
+        <div class="section mb-2">
+          <label class="row">
+            <span class="text-sm">Debug Mode</span>
+            <input type="checkbox" name="debugMode" class="input">
+          </label>
+        </div>
+
+        <div class="grid-2 mt-2">
+          <button type="button" id="exportSettings" class="btn btn-secondary btn-sm">Export</button>
+          <button type="button" id="importSettings" class="btn btn-secondary btn-sm">Import</button>
+          <input type="file" id="importFile" accept="application/json" />
+        </div>
+
+        <div class="mt-2">
+          <button type="button" id="reset" class="btn btn-destructive btn-sm w-full">Reset Defaults</button>
+        </div>
+      </form>
+    </details>
+  </div>
+
+  <script src="validate.js"></script>
+  <script src="config.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

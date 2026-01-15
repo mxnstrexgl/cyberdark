@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyberdark Settings</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+
+<body>
+  <main>
+    <h1>Cyberdark Settings</h1>
+    <form id="settings-form">
+      <fieldset>
+        <legend>Presets</legend>
+        <div class="presets-row">
+          <button type="button" class="preset-btn" data-preset="cyberpunk">Cyberpunk</button>
+          <button type="button" class="preset-btn" data-preset="minimal">Minimal</button>
+          <button type="button" class="preset-btn" data-preset="vampire">Vampire</button>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Neon Color Scheme</legend>
+        <label>Color 1: <input type="color" name="color1" value="#00ffff" /></label>
+        <label>Color 2: <input type="color" name="color2" value="#00ff00" /></label>
+        <label>Color 3: <input type="color" name="color3" value="#ff00ff" /></label>
+        <label>Color 4: <input type="color" name="color4" value="#ff0000" /></label>
+      </fieldset>
+      <fieldset>
+        <legend>Appearance</legend>
+        <label><input type="checkbox" name="textShadow" checked /> Enable text shadow</label>
+        <label><input type="checkbox" name="highContrast" checked /> High contrast mode</label>
+        <label><input type="checkbox" name="focusOutline" checked /> Always show focus outline</label>
+        <label><input type="checkbox" name="reducedMotion" /> Prefer reduced motion</label>
+        <label>Font size:
+          <input type="range" name="fontSize" min="12" max="24" value="16" step="1" aria-valuenow="16"
+            aria-valuemin="12" aria-valuemax="24" />
+          <span id="fontSizeValue">16px</span>
+        </label>
+        <label>Line height:
+          <input type="range" name="lineHeight" min="1.0" max="2.2" value="1.5" step="0.05" aria-valuenow="1.5"
+            aria-valuemin="1.0" aria-valuemax="2.2" />
+          <span id="lineHeightValue">1.5</span>
+        </label>
+        <label>
+          Color Blindness Mode:
+          <select name="colorBlindMode">
+            <option value="none">None</option>
+            <option value="protanopia">Protanopia (Red-blind)</option>
+            <option value="deuteranopia">Deuteranopia (Green-blind)</option>
+            <option value="tritanopia">Tritanopia (Blue-blind)</option>
+            <option value="achromatopsia">Achromatopsia (Monochromacy)</option>
+          </select>
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Scheduling</legend>
+        <label><input type="checkbox" name="scheduleEnabled" /> Enable Scheduling</label>
+        <div id="scheduleInputs" class="schedule-inputs">
+          <label>Start Time: <input type="time" name="scheduleStart" /></label>
+          <label>End Time: <input type="time" name="scheduleEnd" /></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Site Control</legend>
+        <label>Blacklist domains (one per line):<br />
+          <textarea name="blacklist" placeholder="example.com" rows="4"></textarea>
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Debug & Analytics</legend>
+        <div class="mb-1">
+          <strong>Pages Darkened:</strong> <span id="analyticsPages">0</span>
+        </div>
+        <label><input type="checkbox" name="debugMode" /> Enable Debug Mode</label>
+        <button type="button" id="viewLogsBtn" class="mt-1">View Logs</button>
+        <textarea id="logViewer" rows="6" readonly class="log-viewer"></textarea>
+      </fieldset>
+      <fieldset>
+        <legend>Per-site Overrides (JSON)</legend>
+        <label>
+          <textarea name="perSiteOverrides" rows="6" placeholder='{"example.com":{"color1":"#ff0000"}}'></textarea>
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Export/Import</legend>
+        <button type="button" id="exportSettings">Export Settings</button>
+        <input type="file" id="importFile" accept="application/json" />
+        <button type="button" id="importSettings">Import Settings</button>
+      </fieldset>
+      <button type="submit">Save</button>
+      <button type="button" id="reset">Reset to Default</button>
+    </form>
+    <div id="status" aria-live="polite" tabindex="-1"></div>
+    <section id="livePreview" tabindex="0" aria-label="Live Preview" class="live-preview">
+      <h2 class="live-preview-title">Live Preview</h2>
+      <div id="previewBox" class="preview-box">
+        <div class="header-row">Header Row Example</div>
+        <table class="full-width mt-1">
+          <thead>
+            <tr>
+              <th>Column A</th>
+              <th>Column B</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Dark cell</td>
+              <td>Dark cell</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="info-bar mt-1">Info Bar Example</div>
+        <input type="search" placeholder="Search preview..." class="preview-search" />
+        <button class="mt-1">Button Example</button>
+      </div>
+    </section>
+    <section id="aboutHelp" class="about-help">
+      <h2>About / Help</h2>
+      <p>Version 1.0</p>
+      <p><a href="https://github.com/your-repo/Cyberdark" target="_blank" rel="noopener">GitHub Repository</a></p>
+      <p><a href="https://example.com/support" target="_blank" rel="noopener">Support</a></p>
+    </section>
+  </main>
+  <script src="validate.js"></script>
+  <script src="config.js"></script>
+  <script src="options.js"></script>
+</body>
+
+</html>

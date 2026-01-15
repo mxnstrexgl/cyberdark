@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "Cyberdark - Dark Mode",
+    "description": "The name of the extension"
+  },
+  "appDescription": {
+    "message": "Beautiful dark mode with cyberpunk neon styling. Accessibility features, color presets, site blacklist, and scheduled activation.",
+    "description": "The description of the extension"
+  }
+}
