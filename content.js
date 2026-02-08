@@ -1,6 +1,133 @@
-// Force dark mode on page load and during navigation - REMOVED to fix disabled state leakage
-// document.documentElement.style.backgroundColor = '#1a1a1a';
-// document.documentElement.style.color = '#ffffff';
+// === EMERGENCY DARK MODE ===
+// Prevents flashbang by applying dark background BEFORE async storage loads
+// Removed gracefully if extension is disabled or full styles are applied
+// Uses pitch-black (#0a0a0a) for maximum eye protection
+
+// === Module-level state flags (declared early for use in emergency removal) ===
+// Prevents multiple animation triggers during emergency dark removal
+let emergencyRemovalInProgress = false;
+// Prevents multiple listener registrations (memory leak prevention)
+let storageListenerRegistered = false;
+// MutationObserver for dynamic media elements
+let mediaObserver = null;
+
+(function injectEmergencyDark() {
+  'use strict';
+
+  // Check feature flag (defaults to enabled if config not loaded yet)
+  const featureEnabled = typeof CyberdarkConfig === 'undefined' ||
+    !CyberdarkConfig.FEATURES ||
+    CyberdarkConfig.FEATURES.emergencyDarkMode !== false;
+
+  if (!featureEnabled) return;
+
+  // Skip PDFs - browser handles these differently
+  if (window.location.pathname.endsWith('.pdf') ||
+      document.contentType === 'application/pdf') {
+    return;
+  }
+
+  // Inject color-scheme meta tag for browser hint
+  const meta = document.createElement('meta');
+  meta.name = 'color-scheme';
+  meta.content = 'dark only';
+  (document.head || document.documentElement).appendChild(meta);
+
+  // Create emergency stylesheet
+  const emergency = document.createElement('style');
+  emergency.id = 'cyberdark-emergency';
+  emergency.textContent = `
+    /* Emergency dark - maximum protection */
+    html {
+      background-color: #0a0a0a !important;
+      color-scheme: dark !important;
+    }
+
+    /* Overlay to catch any white flashes */
+    html::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: #0a0a0a;
+      z-index: 2147483646;
+      pointer-events: none;
+    }
+
+    /* Force dark on common white patterns */
+    body, main, article, section, div, header, footer, nav, aside {
+      background-color: #0a0a0a !important;
+    }
+
+    /* Skeleton loaders and loading states */
+    [class*="skeleton"], [class*="loading"], [class*="placeholder"],
+    [class*="shimmer"], [class*="pulse"] {
+      background-color: #1a1a1a !important;
+      animation: none !important;
+    }
+
+    /* Modal backdrops */
+    [class*="modal"], [class*="overlay"], [class*="backdrop"],
+    [role="dialog"], [role="alertdialog"] {
+      background-color: rgba(0,0,0,0.9) !important;
+    }
+
+    /* Cross-origin iframe coverage */
+    iframe {
+      background-color: #0a0a0a !important;
+      border-color: #333 !important;
+    }
+
+    /* Canvas/video protection until content loads */
+    canvas:not([data-cyberdark-ready]),
+    video:not([data-cyberdark-ready]) {
+      filter: brightness(0.1);
+      transition: filter 0.3s ease;
+    }
+    canvas[data-cyberdark-ready],
+    video[data-cyberdark-ready] {
+      filter: none;
+    }
+
+    /* Text color for readability during emergency phase */
+    html, body {
+      color: #e0e0e0 !important;
+    }
+  `;
+
+  // Inject into documentElement (head doesn't exist yet at document_start)
+  (document.head || document.documentElement).appendChild(emergency);
+})();
+
+// === Graceful Emergency Removal ===
+function removeEmergencyDark(animate = true) {
+  const emergency = document.getElementById('cyberdark-emergency');
+  if (!emergency) return;
+
+  // Guard against multiple rapid calls during animation
+  if (emergencyRemovalInProgress) return;
+
+  // Also remove the color-scheme meta if we're disabling
+  const colorSchemeMeta = document.querySelector('meta[name="color-scheme"][content="dark only"]');
+
+  if (animate) {
+    emergencyRemovalInProgress = true;
+    // Fade out overlay smoothly via CSS transition
+    emergency.textContent += `
+      html::before {
+        transition: opacity 0.15s ease-out !important;
+        opacity: 0 !important;
+      }
+    `;
+    setTimeout(() => {
+      emergency.remove();
+      if (colorSchemeMeta) colorSchemeMeta.remove();
+      emergencyRemovalInProgress = false;
+    }, 150);
+  } else {
+    emergency.remove();
+    if (colorSchemeMeta) colorSchemeMeta.remove();
+  }
+}
 
 // Import validation utilities
 const validate = typeof CyberdarkValidate !== 'undefined' ? CyberdarkValidate : null;
@@ -30,6 +157,10 @@ const config = typeof CyberdarkConfig !== 'undefined' ? CyberdarkConfig : {
 const cyberdarkDefaults = config.DEFAULT_SETTINGS;
 
 // Site detection: Check if site already has dark mode
+// NOTE: Reserved for future optimization - could skip style injection on sites
+// that already have native dark mode, reducing visual disruption.
+// Not currently called to ensure consistent behavior across all sites.
+// To use: Check `hasNativeDarkMode()` in `loadAndApplyCyberdark()` and skip if true.
 function hasNativeDarkMode() {
   // Check for common dark mode classes on body/html
   if (document.documentElement.classList.contains('dark') || document.body.classList.contains('dark')) return true;
@@ -443,6 +574,9 @@ function loadAndApplyCyberdark() {
         }
 
         if (shouldApply) {
+          // Remove emergency dark as we apply full styles (smooth transition)
+          removeEmergencyDark(true);
+
           // Analytics: Increment pages darkened (throttled)
           // We can't write to storage directly from content script easily without permission or messaging
           // So we'll just log it for now, or send message to background if we had one listening
@@ -456,32 +590,78 @@ function loadAndApplyCyberdark() {
           injectStructuralDarkCSS();
           document.querySelectorAll('thead, th, .header-row, [role="columnheader"], .info-bar, .status-row, .notice, .alert, [role="status"], [role="alert"]').forEach(overrideStructuralInlineStyles);
           observeStructuralElements();
-        } else {
-          removeCyberdarkStyles();
-        }
-      });
-      // Listen for changes
-      chrome.storage.onChanged.addListener((changes, area) => {
-        if (area === 'sync' && (changes.cyberdarkSettings || changes.cyberdarkEnabled)) {
-          chrome.storage.sync.get(['cyberdarkEnabled', 'cyberdarkSettings'], (res) => {
-            const enabled = res.cyberdarkEnabled === true;
-            const settings = Object.assign({}, cyberdarkDefaults, res.cyberdarkSettings || {});
-            const domain = window.location.hostname;
-            const overrides = (settings.perSiteOverrides && settings.perSiteOverrides[domain]) || {};
-            const finalSettings = Object.assign({}, settings, overrides);
-            const blacklisted = config.isBlacklisted(domain, finalSettings.blacklist);
-            if (enabled && !blacklisted) {
-              applyCyberdarkStyles(finalSettings);
-              applyCyberdarkIframes();
-              applyCyberdarkShadowDOM();
-              injectStructuralDarkCSS();
-              observeStructuralElements();
-            } else {
-              removeCyberdarkStyles();
-            }
+
+          // Mark canvas/video as ready for filter removal
+          document.querySelectorAll('canvas, video').forEach(el => {
+            el.setAttribute('data-cyberdark-ready', 'true');
           });
+
+          // Observe for dynamically added canvas/video elements
+          if (!mediaObserver && document.body) {
+            mediaObserver = new MutationObserver(mutations => {
+              mutations.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                  if (node.nodeType === 1) {
+                    if (node.tagName === 'CANVAS' || node.tagName === 'VIDEO') {
+                      node.setAttribute('data-cyberdark-ready', 'true');
+                    }
+                    if (node.querySelectorAll) {
+                      node.querySelectorAll('canvas, video').forEach(el => {
+                        el.setAttribute('data-cyberdark-ready', 'true');
+                      });
+                    }
+                  }
+                });
+              });
+            });
+            mediaObserver.observe(document.body, { childList: true, subtree: true });
+          }
+        } else {
+          // Extension disabled or blacklisted - remove emergency dark immediately
+          removeEmergencyDark(false);
+          removeCyberdarkStyles();
+          // Disconnect media observer when disabled
+          if (mediaObserver) {
+            mediaObserver.disconnect();
+            mediaObserver = null;
+          }
         }
       });
+
+      // Register storage change listener ONCE (guard prevents memory leak)
+      if (!storageListenerRegistered) {
+        storageListenerRegistered = true;
+        chrome.storage.onChanged.addListener((changes, area) => {
+          if (area === 'sync' && (changes.cyberdarkSettings || changes.cyberdarkEnabled)) {
+            chrome.storage.sync.get(['cyberdarkEnabled', 'cyberdarkSettings'], (res) => {
+              const enabled = res.cyberdarkEnabled === true;
+              const settings = Object.assign({}, cyberdarkDefaults, res.cyberdarkSettings || {});
+              const domain = window.location.hostname;
+              const overrides = (settings.perSiteOverrides && settings.perSiteOverrides[domain]) || {};
+              const finalSettings = Object.assign({}, settings, overrides);
+              const blacklisted = config.isBlacklisted(domain, finalSettings.blacklist);
+              if (enabled && !blacklisted) {
+                // Remove any lingering emergency dark
+                removeEmergencyDark(true);
+                applyCyberdarkStyles(finalSettings);
+                applyCyberdarkIframes();
+                applyCyberdarkShadowDOM();
+                injectStructuralDarkCSS();
+                observeStructuralElements();
+              } else {
+                // Extension toggled off - remove emergency dark immediately
+                removeEmergencyDark(false);
+                removeCyberdarkStyles();
+                // Disconnect media observer when disabled
+                if (mediaObserver) {
+                  mediaObserver.disconnect();
+                  mediaObserver = null;
+                }
+              }
+            });
+          }
+        });
+      }
     } else {
       // Fallback: Do NOTHING if storage is unavailable. Strict disabled logic.
       // applyCyberdarkStyles(cyberdarkDefaults); 
@@ -502,14 +682,43 @@ function loadAndApplyCyberdark() {
   };
 }
 
-// Initialize
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    loadAndApplyCyberdark();
-  });
-} else {
-  loadAndApplyCyberdark();
-}
+// Initialize with fast-path enabled check via background worker cache
+(async function initCyberdark() {
+  try {
+    // Fast path: query background worker cache (~0ms vs 20-100ms storage)
+    // Include hostname for blacklist check
+    const response = await chrome.runtime.sendMessage({
+      type: 'getEnabledState',
+      hostname: window.location.hostname
+    });
+
+    if (response?.enabled === false || response?.blacklisted === true) {
+      // Extension disabled or site blacklisted - remove emergency dark immediately (no animation)
+      removeEmergencyDark(false);
+      if (response?.enabled === false) {
+        return; // Don't proceed with full initialization if disabled
+      }
+      // If just blacklisted, still register listener for future changes
+    }
+
+    // Extension enabled or unknown - continue with full initialization
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadAndApplyCyberdark);
+    } else {
+      loadAndApplyCyberdark();
+    }
+  } catch (err) {
+    // Background unavailable (service worker not ready, or extension context invalid)
+    // Fall through to async storage check - emergency dark stays until we know
+    if (config.Logger) config.Logger.debug('Background unavailable, falling back to storage', err);
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadAndApplyCyberdark);
+    } else {
+      loadAndApplyCyberdark();
+    }
+  }
+})();
 
 
 // === Resource Monitoring & Warning System ===

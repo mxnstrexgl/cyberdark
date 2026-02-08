@@ -60,7 +60,27 @@
             color4: '#440000',
             textShadow: true,
             highContrast: true
+        },
+        // Mission Control: NASA-style cockpit lighting for deep work
+        // Inspired by spacecraft instrument panels - optimized for night vision
+        // and long work sessions. Green phosphor text on deep space black.
+        cockpit: {
+            color1: '#00ff41',      // Terminal green (phosphor)
+            color2: '#00cc33',      // Darker green for hierarchy
+            color3: '#ff6b00',      // Warning orange (alerts)
+            color4: '#003300',      // Deep green (backgrounds)
+            textShadow: true,       // Subtle glow for CRT effect
+            highContrast: true,     // Maximum readability
+            fontSize: 14,           // Slightly smaller, info-dense
+            fontFamily: '"Share Tech Mono", "SF Mono", "Consolas", monospace' // NASA-style
         }
+    };
+
+    // Feature flags for rollback capability
+    const FEATURES = {
+        // Emergency dark mode injection at document_start
+        // Set to false to revert to original behavior if issues arise
+        emergencyDarkMode: true
     };
 
     const COLORBLIND_PALETTES = {
@@ -147,6 +167,7 @@
         SITE_PROFILES,
         PROBLEMATIC_SITES,
         PRESETS,
+        FEATURES,
         COLORBLIND_PALETTES,
         isBlacklisted,
         Logger,

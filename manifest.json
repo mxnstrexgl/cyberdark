@@ -1,9 +1,11 @@
 {
   "manifest_version": 3,
   "name": "Cyberdark - Dark Mode",
-  "version": "2.0.0",
-  "version_name": "2.0.0",
-  "description": "Beautiful dark mode with cyberpunk neon styling. Accessibility features, color presets, site blacklist, and scheduled activation.",
+  "short_name": "Cyberdark",
+  "version": "2.1.0",
+  "version_name": "2.1.0",
+  "description": "Instant dark mode that protects your eyes. Zero flashbang - pages are dark from the first pixel. Cyberpunk styling, accessibility features, and scheduled activation.",
+  "author": "lil.business",
   "default_locale": "en",
   "permissions": [
     "activeTab",
@@ -41,5 +43,8 @@
     "open_in_tab": true
   },
   "offline_enabled": true,
-  "homepage_url": "https://github.com/mxnstrexgl/cyberdark"
+  "homepage_url": "https://github.com/mxnstrexgl/cyberdark",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
 }
