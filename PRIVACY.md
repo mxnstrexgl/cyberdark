@@ -66,7 +66,7 @@ All code runs locally in your browser.
 ## Open Source
 
 Cyberdark is open source. You can review our code to verify these privacy claims:
-https://github.com/mxnstrexgl/cyberdark
+https://github.com/lilbusiness/cyberdark
 
 ## Data Deletion
 
@@ -89,8 +89,8 @@ If we make changes to this privacy policy, we will update the "Last updated" dat
 
 If you have questions about this privacy policy or Cyberdark's data practices:
 
-- **GitHub Issues:** https://github.com/mxnstrexgl/cyberdark/issues
-- **Email:** [Add your contact email if desired]
+- **GitHub Issues:** https://github.com/lilbusiness/cyberdark/issues
+- **Email:** shoutout@lil.business
 
 ---
 

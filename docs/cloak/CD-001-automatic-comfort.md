@@ -65,7 +65,7 @@ First-time install:
 - **Minimal permissions:** Only `activeTab` for styling
 - **No data collection:** Don't track which sites users visit
 - **Local storage:** Preferences never leave device
-- **Open source:** Code auditable at github.com/mxnstrexgl/cyberdark
+- **Open source:** Code auditable at github.com/lilbusiness/cyberdark
 
 ### A/B Testing
 
@@ -86,4 +86,4 @@ First-time install:
 
 - CD-002: Per-site customization
 - CD-003: Work hour scheduling
-- XP-001: Integration with Trings calendar
+- XP-001: Integration with calendar apps

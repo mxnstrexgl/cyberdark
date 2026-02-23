@@ -43,7 +43,7 @@
     "open_in_tab": true
   },
   "offline_enabled": true,
-  "homepage_url": "https://github.com/mxnstrexgl/cyberdark",
+  "homepage_url": "https://github.com/lilbusiness/cyberdark",
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
   }
